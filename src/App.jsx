@@ -1,7 +1,7 @@
 import { Navigate, Outlet, Route, Routes } from "react-router";
 import { AppShell } from "./components/AppShell";
 import { LoadingScreen } from "./components/LoadingScreen";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/useAuth";
 import { FeedPage } from "./pages/FeedPage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { RequestsPage } from "./pages/RequestsPage";

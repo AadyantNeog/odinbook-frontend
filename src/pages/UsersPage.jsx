@@ -54,6 +54,7 @@ export function UsersPage() {
 
   async function handleRequest(userId) {
     setBusyUserId(userId);
+    setError("");
     try {
       await api.post("/follow-requests", { receiverId: userId });
       setUsers((current) =>
@@ -61,6 +62,8 @@ export function UsersPage() {
           user.id === userId ? { ...user, relationshipStatus: "requested" } : user,
         ),
       );
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyUserId(null);
     }

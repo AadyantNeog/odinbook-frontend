@@ -7,7 +7,7 @@ import { SectionLabel } from "../components/SectionLabel";
 import { Textarea } from "../components/Textarea";
 import { Button } from "../components/Button";
 import { api } from "../lib/api";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 function replacePost(posts, nextPost) {
   return posts.map((entry) => (entry.id === nextPost.id ? nextPost : entry));
@@ -79,11 +79,14 @@ export function ProfilePage() {
 
   async function handleToggleLike(postId, likedByViewer) {
     setBusyPostId(postId);
+    setError("");
     try {
       const response = likedByViewer
         ? await api.delete(`/posts/${postId}/like`)
         : await api.post(`/posts/${postId}/like`, {});
       setProfile((current) => ({ ...current, posts: replacePost(current.posts, response.post) }));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyPostId(null);
     }
@@ -91,9 +94,12 @@ export function ProfilePage() {
 
   async function handleAddComment(postId, content) {
     setBusyPostId(postId);
+    setError("");
     try {
       const response = await api.post(`/posts/${postId}/comments`, { content });
       setProfile((current) => ({ ...current, posts: replacePost(current.posts, response.post) }));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyPostId(null);
     }

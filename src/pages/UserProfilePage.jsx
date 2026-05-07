@@ -45,11 +45,14 @@ export function UserProfilePage() {
 
   async function handleToggleLike(postId, likedByViewer) {
     setBusyPostId(postId);
+    setError("");
     try {
       const response = likedByViewer
         ? await api.delete(`/posts/${postId}/like`)
         : await api.post(`/posts/${postId}/like`, {});
       setProfile((current) => ({ ...current, posts: replacePost(current.posts, response.post) }));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyPostId(null);
     }
@@ -57,9 +60,12 @@ export function UserProfilePage() {
 
   async function handleAddComment(postId, content) {
     setBusyPostId(postId);
+    setError("");
     try {
       const response = await api.post(`/posts/${postId}/comments`, { content });
       setProfile((current) => ({ ...current, posts: replacePost(current.posts, response.post) }));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyPostId(null);
     }
@@ -77,7 +83,14 @@ export function UserProfilePage() {
     <div className="page">
       <SectionLabel>Public profile</SectionLabel>
       <ProfileHero user={profile.user} />
-      {profile.posts.length === 0 ? (
+      {error ? <p className="form-error">{error}</p> : null}
+      {!profile.canViewPosts ? (
+        <EmptyState
+          title="Posts are only visible to followers"
+          body="Send a follow request and wait for acceptance to read this user's posts."
+        />
+      ) : null}
+      {profile.canViewPosts && profile.posts.length === 0 ? (
         <EmptyState title="No posts yet" body="This profile has not published anything yet." />
       ) : null}
       <div className="stack-xl">

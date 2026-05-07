@@ -3,7 +3,7 @@ import { useState } from "react";
 import { AuthLayout } from "../components/AuthLayout";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export function SignInPage() {
   const navigate = useNavigate();

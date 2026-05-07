@@ -40,9 +40,12 @@ export function RequestsPage() {
 
   async function handleAction(requestId, action) {
     setBusyRequestId(requestId);
+    setError("");
     try {
       await api.patch(`/follow-requests/${requestId}`, { action });
       setRequests((current) => current.filter((entry) => entry.id !== requestId));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyRequestId(null);
     }

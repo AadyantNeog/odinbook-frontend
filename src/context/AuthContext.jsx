@@ -1,9 +1,8 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { api, ApiError, setTokenGetter } from "../lib/api";
+import { AuthContext } from "./auth-context";
 
 const TOKEN_KEY = "odinbook.token";
-
-const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || "");
@@ -75,29 +74,16 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(TOKEN_KEY);
   }
 
-  const value = useMemo(
-    () => ({
-      token,
-      user,
-      isBootstrapping,
-      isAuthenticated: Boolean(token && user),
-      setUser,
-      signIn,
-      signUp,
-      signOut,
-    }),
-    [token, user, isBootstrapping],
-  );
+  const value = {
+    token,
+    user,
+    isBootstrapping,
+    isAuthenticated: Boolean(token && user),
+    setUser,
+    signIn,
+    signUp,
+    signOut,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
-  }
-
-  return context;
 }

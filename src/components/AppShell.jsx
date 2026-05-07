@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
 import { Avatar } from "./Avatar";
 import { Button } from "./Button";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export function AppShell({ children }) {
   const { user, signOut } = useAuth();

@@ -44,9 +44,12 @@ export function FeedPage() {
 
   async function handleCreatePost(content) {
     setComposerBusy(true);
+    setError("");
     try {
       const response = await api.post("/posts", { content });
       setPosts((current) => [response.post, ...current]);
+    } catch (err) {
+      setError(err.message);
     } finally {
       setComposerBusy(false);
     }
@@ -54,11 +57,14 @@ export function FeedPage() {
 
   async function handleToggleLike(postId, likedByViewer) {
     setBusyPostId(postId);
+    setError("");
     try {
       const response = likedByViewer
         ? await api.delete(`/posts/${postId}/like`)
         : await api.post(`/posts/${postId}/like`, {});
       setPosts((current) => replacePost(current, response.post));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyPostId(null);
     }
@@ -66,9 +72,12 @@ export function FeedPage() {
 
   async function handleAddComment(postId, content) {
     setBusyPostId(postId);
+    setError("");
     try {
       const response = await api.post(`/posts/${postId}/comments`, { content });
       setPosts((current) => replacePost(current, response.post));
+    } catch (err) {
+      setError(err.message);
     } finally {
       setBusyPostId(null);
     }
